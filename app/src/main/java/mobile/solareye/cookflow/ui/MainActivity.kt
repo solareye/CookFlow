@@ -15,8 +15,13 @@ import mobile.solareye.cookflow.Actions
 import mobile.solareye.cookflow.Destinations.ReceiptDetail
 import mobile.solareye.cookflow.Destinations.ReceiptDetailArgs.ReceiptId
 import mobile.solareye.cookflow.Destinations.ReceiptList
+import mobile.solareye.cookflow.domain.coroutine.CoroutineDispatchersImpl
+import mobile.solareye.cookflow.domain.coroutine.UiScope
+import mobile.solareye.cookflow.ui.receipts.ReceiptListViewModel
+import mobile.solareye.cookflow.ui.receipts.ReceiptListViewModelFactory
 
 class MainActivity : ComponentActivity() {
+    private val uiScope = UiScope()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,6 +29,7 @@ class MainActivity : ComponentActivity() {
 
             val navController = rememberNavController()
             val actions = remember(navController) { Actions(navController) }
+            val viewModel = remember { receiptListViewModel(actions) }
 
             NavHost(
                 navController = navController,
@@ -31,7 +37,7 @@ class MainActivity : ComponentActivity() {
             ) {
                 composable(ReceiptList) {
                     ReceiptsScreen.ReceiptsScreen(
-                        openReceipt = actions.openReceipt
+                        viewModel = viewModel
                     )
                 }
                 composable(
@@ -46,6 +52,18 @@ class MainActivity : ComponentActivity() {
             }
 
         }
+    }
+
+    private fun receiptListViewModel(actions: Actions): ReceiptListViewModel {
+        val dispatchers = CoroutineDispatchersImpl()
+        return ReceiptListViewModelFactory(uiScope, dispatchers, actions.openReceipt)
+            .create(ReceiptListViewModel::class.java)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        // fixme coroutine scope for each screen?
+        uiScope.destroy()
     }
 }
 
