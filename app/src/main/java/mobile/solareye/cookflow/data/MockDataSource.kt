@@ -28,6 +28,8 @@ object MockDataSource {
 
     suspend fun loadReceiptList(): List<ReceiptDetailItem> {
         delay(3_000)
-        return (1..10).map { receipt(it) }
+        return receiptList()
     }
+
+    fun receiptList(): List<ReceiptDetailItem> = (1..10).map { receipt(it) }
 }

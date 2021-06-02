@@ -9,27 +9,43 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.LiveData
+import mobile.solareye.cookflow.data.MockDataSource
 import mobile.solareye.cookflow.data.receipt_detail.ReceiptDetailItem
-import mobile.solareye.cookflow.ui.receipts.ReceiptListViewModel
+import mobile.solareye.cookflow.ui.receipts.ReceiptListIntent
 import mobile.solareye.cookflow.ui.receipts.ReceiptsListState
 
 object ReceiptsScreen {
-
     @Composable
-    fun ReceiptsScreen(viewModel: ReceiptListViewModel) {
+    fun ReceiptsScreen(
+        stateLiveData: LiveData<ReceiptsListState>,
+        // fixme might be replaced with channel/subject
+        dispatchIntent: (ReceiptListIntent) -> Unit,
+    ) {
         Scaffold {
-            val state = viewModel.state.observeAsState(ReceiptsListState.Loading).value
-            when (state) {
-                is ReceiptsListState.Loading -> ListLoading()
-                is ReceiptsListState.Loaded -> SimpleList(
-                    state.receipts, viewModel::onReceiptSelected)
-                is ReceiptsListState.Error -> ListError(state.explanation)
+            val initialState = remember {
+                dispatchIntent(ReceiptListIntent.LoadInitialPageIntent)
+                ReceiptsListState.initialState()
+            }
+
+            val state = stateLiveData.observeAsState(initialState).value
+            if (state.receipts.isNotEmpty()) {
+                SimpleList(
+                    state.receipts,
+                    { receipt -> dispatchIntent(ReceiptListIntent.OpenReceiptIntent(receipt)) })
+            }
+            if (state.isLoading) {
+                ListLoading()
+            }
+            if (state.error?.isNotEmpty() == true) {
+                ListError(state.error)
             }
         }
     }
@@ -50,7 +66,9 @@ object ReceiptsScreen {
     @Composable
     private fun ListError(message: String) {
         Column(
-            modifier = Modifier.padding(vertical = 64.dp, horizontal = 24.dp).fillMaxWidth(),
+            modifier = Modifier
+                .padding(vertical = 64.dp, horizontal = 24.dp)
+                .fillMaxWidth(),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
@@ -61,7 +79,7 @@ object ReceiptsScreen {
     }
 
     @Composable
-    private fun SimpleList(
+    internal fun SimpleList(
         receipts: List<ReceiptDetailItem>,
         openReceipt: (ReceiptDetailItem) -> Unit
     ) {
@@ -101,5 +119,5 @@ object ReceiptsScreen {
 @Preview(showSystemUi = true)
 @Composable
 fun ReceiptsScreenPreview() {
-    ReceiptsScreen.ReceiptsScreen { println("Clicked #$it") }
+    ReceiptsScreen.SimpleList(MockDataSource.receiptList()) { println("Clicked #$it") }
 }

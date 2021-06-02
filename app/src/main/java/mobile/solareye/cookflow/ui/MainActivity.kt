@@ -37,7 +37,8 @@ class MainActivity : ComponentActivity() {
             ) {
                 composable(ReceiptList) {
                     ReceiptsScreen.ReceiptsScreen(
-                        viewModel = viewModel
+                        stateLiveData = viewModel.state,
+                        dispatchIntent = viewModel::onViewIntent
                     )
                 }
                 composable(
