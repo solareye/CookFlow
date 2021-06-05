@@ -56,7 +56,7 @@ object ReceiptDetailScreen {
                 .fillMaxHeight(),
             state = scrollState,
         ) {
-            for (receiptItem in MockDataSource.receipt) {
+            for (receiptItem in MockDataSource.receipt(receiptId).contents) {
                 item {
                     when (receiptItem) {
                         is ReceiptDetailTitle -> ItemReceiptDetailTitle(receiptItem, receiptId)
