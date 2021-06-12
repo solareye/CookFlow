@@ -12,16 +12,19 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navArgument
 import androidx.navigation.compose.rememberNavController
 import mobile.solareye.cookflow.Actions
-import mobile.solareye.cookflow.Destinations.ReceiptDetail
-import mobile.solareye.cookflow.Destinations.ReceiptDetailArgs.ReceiptId
-import mobile.solareye.cookflow.Destinations.ReceiptList
+import mobile.solareye.cookflow.Destinations.RecipeDetail
+import mobile.solareye.cookflow.Destinations.RecipeDetailArgs.RecipeId
+import mobile.solareye.cookflow.Destinations.RecipeList
+import mobile.solareye.cookflow.data.api.NetworkDataSourceBuilder
 import mobile.solareye.cookflow.domain.coroutine.CoroutineDispatchersImpl
 import mobile.solareye.cookflow.domain.coroutine.UiScope
-import mobile.solareye.cookflow.ui.receipts.ReceiptListViewModel
-import mobile.solareye.cookflow.ui.receipts.ReceiptListViewModelFactory
+import mobile.solareye.cookflow.repository.RecipeListRepositoryImpl
+import mobile.solareye.cookflow.ui.recipes.RecipeListViewModel
+import mobile.solareye.cookflow.ui.recipes.RecipeListViewModelFactory
 
 class MainActivity : ComponentActivity() {
     private val uiScope = UiScope()
+    private val repository = RecipeListRepositoryImpl(NetworkDataSourceBuilder.networkDataSource)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,24 +32,24 @@ class MainActivity : ComponentActivity() {
 
             val navController = rememberNavController()
             val actions = remember(navController) { Actions(navController) }
-            val viewModel = remember { receiptListViewModel(actions) }
+            val viewModel = remember { recipeListViewModel(actions) }
 
             NavHost(
                 navController = navController,
-                startDestination = ReceiptList
+                startDestination = RecipeList
             ) {
-                composable(ReceiptList) {
-                    ReceiptsScreen.ReceiptsScreen(
+                composable(RecipeList) {
+                    RecipesScreen.RecipesScreen(
                         stateLiveData = viewModel.state,
                         dispatchIntent = viewModel::onViewIntent
                     )
                 }
                 composable(
-                    "${ReceiptDetail}/{$ReceiptId}",
-                    arguments = listOf(navArgument(ReceiptId) { type = NavType.IntType })
+                    "${RecipeDetail}/{$RecipeId}",
+                    arguments = listOf(navArgument(RecipeId) { type = NavType.IntType })
                 ) { backStackEntry ->
-                    ReceiptDetailScreen.ReceiptDetailScreen(
-                        receiptId = backStackEntry.arguments?.getInt(ReceiptId) ?: -1,
+                    RecipeDetailScreen.RecipeDetailScreen(
+                        recipeId = backStackEntry.arguments?.getString(RecipeId) ?: "-1",
                         navigateBack = actions.navigateBack
                     )
                 }
@@ -55,10 +58,10 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private fun receiptListViewModel(actions: Actions): ReceiptListViewModel {
+    private fun recipeListViewModel(actions: Actions): RecipeListViewModel {
         val dispatchers = CoroutineDispatchersImpl()
-        return ReceiptListViewModelFactory(uiScope, dispatchers, actions.openReceipt)
-            .create(ReceiptListViewModel::class.java)
+        return RecipeListViewModelFactory(uiScope, dispatchers, repository, actions.openRecipe)
+            .create(RecipeListViewModel::class.java)
     }
 
     override fun onDestroy() {

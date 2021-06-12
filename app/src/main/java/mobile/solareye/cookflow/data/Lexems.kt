@@ -2,8 +2,8 @@ package mobile.solareye.cookflow.data
 
 object Lexems {
     const val LINE_BREAK = "\n"
-    val receiptDetailTitle = "Варенье"
-    val receiptDetailDescription =
+    val recipeDetailTitle = "Варенье"
+    val recipeDetailDescription =
         "— Тревога всем пóлкам!" + LINE_BREAK +
                 "— Ой-ой! Что случилось?" + LINE_BREAK +
                 "— Бабуля в парадный доспех облачилась!" + LINE_BREAK +

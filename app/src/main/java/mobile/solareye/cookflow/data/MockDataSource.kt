@@ -2,7 +2,7 @@ package mobile.solareye.cookflow.data
 
 import kotlinx.coroutines.delay
 import mobile.solareye.cookflow.R
-import mobile.solareye.cookflow.data.receipt_detail.*
+import mobile.solareye.cookflow.data.recipe_detail.*
 
 object MockDataSource {
 
@@ -17,19 +17,19 @@ object MockDataSource {
         R.drawable.ic_apple,
     )
 
-    fun receipt(id: Int) = ReceiptDetailItem(
+    fun recipe(id: String) = RecipeDetailItem(
         id,
         listOf(
-            ReceiptDetailTitle(Lexems.receiptDetailTitle),
-            ReceiptDetailBigImage(R.drawable.image_big),
-            ReceiptDetailDescription(Lexems.receiptDetailDescription),
-            ReceiptDetailThumbnails(thumbnails),
+            RecipeDetailTitle(Lexems.recipeDetailTitle),
+            RecipeDetailBigImage(R.drawable.image_big),
+            RecipeDetailDescription(Lexems.recipeDetailDescription),
+            RecipeDetailThumbnails(thumbnails),
         ))
 
-    suspend fun loadReceiptList(): List<ReceiptDetailItem> {
+    suspend fun loadRecipeList(): List<RecipeDetailItem> {
         delay(3_000)
-        return receiptList()
+        return recipeList()
     }
 
-    fun receiptList(): List<ReceiptDetailItem> = (1..10).map { receipt(it) }
+    fun recipeList(): List<RecipeDetailItem> = (1..10).map { recipe("$it") }
 }

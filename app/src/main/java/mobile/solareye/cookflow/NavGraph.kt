@@ -2,20 +2,20 @@ package mobile.solareye.cookflow
 
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.navigate
-import mobile.solareye.cookflow.Destinations.ReceiptDetail
+import mobile.solareye.cookflow.Destinations.RecipeDetail
 
 object Destinations {
-    const val ReceiptList = "receiptList"
-    const val ReceiptDetail = "receiptDetail"
+    const val RecipeList = "recipeList"
+    const val RecipeDetail = "recipeDetail"
 
-    object ReceiptDetailArgs {
-        const val ReceiptId = "receiptId"
+    object RecipeDetailArgs {
+        const val RecipeId = "recipeId"
     }
 }
 
 class Actions(navController: NavHostController) {
-    val openReceipt: (Int) -> Unit = { receiptId ->
-        navController.navigate("$ReceiptDetail/$receiptId")
+    val openRecipe: (String) -> Unit = { recipeId ->
+        navController.navigate("$RecipeDetail/$recipeId")
     }
     val navigateBack: () -> Unit = {
         navController.popBackStack()

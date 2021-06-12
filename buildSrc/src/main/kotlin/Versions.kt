@@ -1,6 +1,6 @@
 object Versions {
     //app level
-    const val gradle = "7.0.0-alpha15"
+    const val gradle = "7.0.0-beta03"
     const val kotlin = "1.4.32"
 
     //libs
@@ -14,6 +14,10 @@ object Versions {
     const val navigation = "2.3.5"
     const val navigationCompose = "1.0.0-alpha10"
     const val compose = "1.0.0-beta05"
+
+    //network
+    const val retrofit = "2.9.0"
+    const val loggingInterceptor = "3.1.0"
 
     //test
     const val junit = "4.12"

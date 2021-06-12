@@ -18,28 +18,32 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.LiveData
 import mobile.solareye.cookflow.data.MockDataSource
-import mobile.solareye.cookflow.data.receipt_detail.ReceiptDetailItem
-import mobile.solareye.cookflow.ui.receipts.ReceiptListIntent
-import mobile.solareye.cookflow.ui.receipts.ReceiptsListState
+import mobile.solareye.cookflow.data.recipe_detail.RecipeDetailItem
+import mobile.solareye.cookflow.ui.recipes.RecipeListIntent
+import mobile.solareye.cookflow.ui.recipes.RecipesListState
 
-object ReceiptsScreen {
+object RecipesScreen {
     @Composable
-    fun ReceiptsScreen(
-        stateLiveData: LiveData<ReceiptsListState>,
+    fun RecipesScreen(
+        stateLiveData: LiveData<RecipesListState>,
         // fixme might be replaced with channel/subject
-        dispatchIntent: (ReceiptListIntent) -> Unit,
+        dispatchIntent: (RecipeListIntent) -> Unit,
     ) {
         Scaffold {
             val initialState = remember {
-                dispatchIntent(ReceiptListIntent.LoadInitialPageIntent)
-                ReceiptsListState.initialState()
+                dispatchIntent(RecipeListIntent.LoadInitialPageIntent)
+                RecipesListState.initialState()
             }
 
             val state = stateLiveData.observeAsState(initialState).value
-            if (state.receipts.isNotEmpty()) {
-                SimpleList(
-                    state.receipts,
-                    { receipt -> dispatchIntent(ReceiptListIntent.OpenReceiptIntent(receipt)) })
+            if (state.recipes.isNotEmpty()) {
+                SimpleList(state.recipes) { recipe ->
+                    dispatchIntent(
+                        RecipeListIntent.OpenRecipeIntent(
+                            recipe
+                        )
+                    )
+                }
             }
             if (state.isLoading) {
                 ListLoading()
@@ -80,8 +84,8 @@ object ReceiptsScreen {
 
     @Composable
     internal fun SimpleList(
-        receipts: List<ReceiptDetailItem>,
-        openReceipt: (ReceiptDetailItem) -> Unit
+        recipes: List<RecipeDetailItem>,
+        openRecipe: (RecipeDetailItem) -> Unit
     ) {
         val scrollState = rememberLazyListState()
         LazyColumn(
@@ -90,21 +94,21 @@ object ReceiptsScreen {
                 .fillMaxHeight(),
             state = scrollState
         ) {
-            for (receipt in receipts) {
+            for (recipe in recipes) {
                 item {
-                    SimpleItem(receipt, openReceipt)
+                    SimpleItem(recipe, openRecipe)
                 }
             }
         }
     }
 
     @Composable
-    private fun SimpleItem(receipt: ReceiptDetailItem, openReceipt: (ReceiptDetailItem) -> Unit) {
+    private fun SimpleItem(recipe: RecipeDetailItem, openRecipe: (RecipeDetailItem) -> Unit) {
         Box(modifier = Modifier
             .fillMaxWidth()
-            .clickable { openReceipt(receipt) }) {
+            .clickable { openRecipe(recipe) }) {
             Text(
-                text = "Рецепт #${receipt.id}",
+                text = "Рецепт #${recipe.id}",
                 style = TextStyle(
                     fontSize = 24.sp,
                 ),
@@ -118,6 +122,6 @@ object ReceiptsScreen {
 
 @Preview(showSystemUi = true)
 @Composable
-fun ReceiptsScreenPreview() {
-    ReceiptsScreen.SimpleList(MockDataSource.receiptList()) { println("Clicked #$it") }
+fun RecipesScreenPreview() {
+    RecipesScreen.SimpleList(MockDataSource.recipeList()) { println("Clicked #$it") }
 }
