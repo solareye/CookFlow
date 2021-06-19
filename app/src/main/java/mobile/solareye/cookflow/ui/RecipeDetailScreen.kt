@@ -28,27 +28,27 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import mobile.solareye.cookflow.data.MockDataSource
-import mobile.solareye.cookflow.data.receipt_detail.ReceiptDetailBigImage
-import mobile.solareye.cookflow.data.receipt_detail.ReceiptDetailDescription
-import mobile.solareye.cookflow.data.receipt_detail.ReceiptDetailThumbnails
-import mobile.solareye.cookflow.data.receipt_detail.ReceiptDetailTitle
+import mobile.solareye.cookflow.data.recipe_detail.RecipeDetailBigImage
+import mobile.solareye.cookflow.data.recipe_detail.RecipeDetailDescription
+import mobile.solareye.cookflow.data.recipe_detail.RecipeDetailThumbnails
+import mobile.solareye.cookflow.data.recipe_detail.RecipeDetailTitle
 import mobile.solareye.cookflow.ui.component.SimpleFlowRow
 import kotlin.random.Random
 
-object ReceiptDetailScreen {
+object RecipeDetailScreen {
 
     @Composable
-    fun ReceiptDetailScreen(receiptId: Int, navigateBack: () -> Unit) {
+    fun RecipeDetailScreen(recipeId: String, navigateBack: () -> Unit) {
         Scaffold {
             val scrollState = rememberLazyListState()
-            SimpleList(scrollState, receiptId)
+            SimpleList(scrollState, recipeId)
         }
     }
 
     @Composable
     private fun SimpleList(
         scrollState: LazyListState,
-        receiptId: Int
+        recipeId: String
     ) {
         LazyColumn(
             modifier = Modifier
@@ -56,13 +56,13 @@ object ReceiptDetailScreen {
                 .fillMaxHeight(),
             state = scrollState,
         ) {
-            for (receiptItem in MockDataSource.receipt(receiptId).contents) {
+            for (recipeItem in MockDataSource.recipe(recipeId).contents) {
                 item {
-                    when (receiptItem) {
-                        is ReceiptDetailTitle -> ItemReceiptDetailTitle(receiptItem, receiptId)
-                        is ReceiptDetailBigImage -> ItemReceiptDetailBigImage(receiptItem)
-                        is ReceiptDetailDescription -> ItemReceiptDetailDescription(receiptItem)
-                        is ReceiptDetailThumbnails -> ItemReceiptDetailThumbnails(receiptItem)
+                    when (recipeItem) {
+                        is RecipeDetailTitle -> ItemRecipeDetailTitle(recipeItem, recipeId)
+                        is RecipeDetailBigImage -> ItemRecipeDetailBigImage(recipeItem)
+                        is RecipeDetailDescription -> ItemRecipeDetailDescription(recipeItem)
+                        is RecipeDetailThumbnails -> ItemRecipeDetailThumbnails(recipeItem)
                     }
                 }
             }
@@ -70,9 +70,9 @@ object ReceiptDetailScreen {
     }
 
     @Composable
-    private fun ItemReceiptDetailTitle(receiptDetailTitle: ReceiptDetailTitle, receiptId: Int) {
+    private fun ItemRecipeDetailTitle(recipeDetailTitle: RecipeDetailTitle, recipeId: String) {
         Text(
-            text = "${receiptDetailTitle.text} #$receiptId",
+            text = "${recipeDetailTitle.text} #$recipeId",
             style = TextStyle(
                 fontWeight = FontWeight.Bold,
                 lineHeight = 32.sp,
@@ -83,10 +83,10 @@ object ReceiptDetailScreen {
     }
 
     @Composable
-    private fun ItemReceiptDetailBigImage(receiptDetailBigImage: ReceiptDetailBigImage) {
+    private fun ItemRecipeDetailBigImage(recipeDetailBigImage: RecipeDetailBigImage) {
         val imageShape = RoundedCornerShape(32.dp)
         Image(
-            bitmap = ImageBitmap.imageResource(id = receiptDetailBigImage.imageRes),
+            bitmap = ImageBitmap.imageResource(id = recipeDetailBigImage.imageRes),
             contentDescription = null,
             contentScale = ContentScale.Crop,
             modifier = Modifier
@@ -98,9 +98,9 @@ object ReceiptDetailScreen {
     }
 
     @Composable
-    private fun ItemReceiptDetailDescription(receiptDetailDescription: ReceiptDetailDescription) {
+    private fun ItemRecipeDetailDescription(recipeDetailDescription: RecipeDetailDescription) {
         Text(
-            text = receiptDetailDescription.text,
+            text = recipeDetailDescription.text,
             style = TextStyle(
                 lineHeight = 32.sp,
                 fontSize = 18.sp,
@@ -110,13 +110,13 @@ object ReceiptDetailScreen {
     }
 
     @Composable
-    private fun ItemReceiptDetailThumbnails(receiptDetailThumbnails: ReceiptDetailThumbnails) {
+    private fun ItemRecipeDetailThumbnails(recipeDetailThumbnails: RecipeDetailThumbnails) {
         SimpleFlowRow(
             modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp),
             horizontalGap = 8.dp,
             verticalGap = 8.dp
         ) {
-            for (thumbnail in receiptDetailThumbnails.images) {
+            for (thumbnail in recipeDetailThumbnails.images) {
                 val color = 0xFF000000 or Random.nextLong(0xffffff)
                 println("color = $color")
                 Image(
@@ -134,6 +134,6 @@ object ReceiptDetailScreen {
 
 @Preview(showSystemUi = true)
 @Composable
-fun ReceiptDetailScreenPreview() {
-    ReceiptDetailScreen.ReceiptDetailScreen(0) { }
+fun RecipeDetailScreenPreview() {
+    RecipeDetailScreen.RecipeDetailScreen("0") { }
 }

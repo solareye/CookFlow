@@ -35,12 +35,17 @@ object Dependencies {
         const val testing = "androidx.compose.ui:ui-test-junit4:${Versions.compose}"
     }
 
+    object Network {
+        const val retrofit = "com.squareup.retrofit2:retrofit:${Versions.retrofit}"
+        const val moshiConverter = "com.squareup.retrofit2:converter-moshi:${Versions.retrofit}"
+        const val loggingInterceptor = "com.github.ihsanbal:LoggingInterceptor:${Versions.loggingInterceptor}"
+    }
+
     object Test {
         //test libs
         const val junit = "junit:junit:${Versions.junit}"
         const val extJUnit = "androidx.test.ext:junit:${Versions.extJunit}"
         const val espressoCore = "androidx.test.espresso:espresso-core:${Versions.espresso}"
-
     }
 
     val appLibraries = arrayListOf(
@@ -60,7 +65,11 @@ object Dependencies {
         Compose.tooling,
         Compose.runtime,
         Compose.livedata,
-        Compose.icons
+        Compose.icons,
+
+        Network.retrofit,
+        Network.moshiConverter,
+        Network.loggingInterceptor
     )
 
     val androidTestLibraries = arrayListOf(

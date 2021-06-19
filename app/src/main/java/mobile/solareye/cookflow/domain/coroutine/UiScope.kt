@@ -5,7 +5,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancelChildren
 import kotlin.coroutines.CoroutineContext
-
+//FIXME: What's the point of UiScope?
 class UiScope : CoroutineScope {
     private val job = SupervisorJob()
     override val coroutineContext: CoroutineContext
