@@ -56,14 +56,12 @@ object RecipesScreen {
 
     @Composable
     private fun ListLoading() {
-        Column(
-            modifier = Modifier.fillMaxWidth(),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally,
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight()
         ) {
-            Box(modifier = Modifier.fillMaxSize()) {
-                CircularProgressIndicator(modifier = Modifier.wrapContentWidth(Alignment.CenterHorizontally))
-            }
+            CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
         }
     }
 

@@ -3,6 +3,7 @@ package mobile.solareye.cookflow.ui
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.tooling.preview.Preview
@@ -23,8 +24,11 @@ import mobile.solareye.cookflow.ui.recipes.RecipeListViewModel
 import mobile.solareye.cookflow.ui.recipes.RecipeListViewModelFactory
 
 class MainActivity : ComponentActivity() {
+
     private val uiScope = UiScope()
-    private val repository = RecipeListRepositoryImpl(NetworkDataSourceBuilder.networkDataSource)
+    private val repository by lazy {
+        RecipeListRepositoryImpl(NetworkDataSourceBuilder.networkDataSource)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,19 +43,23 @@ class MainActivity : ComponentActivity() {
                 startDestination = RecipeList
             ) {
                 composable(RecipeList) {
-                    RecipesScreen.RecipesScreen(
-                        stateLiveData = viewModel.state,
-                        dispatchIntent = viewModel::onViewIntent
-                    )
+                    MaterialTheme {
+                        RecipesScreen.RecipesScreen(
+                            stateLiveData = viewModel.state,
+                            dispatchIntent = viewModel::onViewIntent
+                        )
+                    }
                 }
                 composable(
                     "${RecipeDetail}/{$RecipeId}",
-                    arguments = listOf(navArgument(RecipeId) { type = NavType.IntType })
+                    arguments = listOf(navArgument(RecipeId) { type = NavType.StringType })
                 ) { backStackEntry ->
-                    RecipeDetailScreen.RecipeDetailScreen(
-                        recipeId = backStackEntry.arguments?.getString(RecipeId) ?: "-1",
-                        navigateBack = actions.navigateBack
-                    )
+                    MaterialTheme {
+                        RecipeDetailScreen.RecipeDetailScreen(
+                            recipeId = backStackEntry.arguments?.getString(RecipeId) ?: "-1",
+                            navigateBack = actions.navigateBack
+                        )
+                    }
                 }
             }
 

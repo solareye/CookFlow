@@ -1,7 +1,6 @@
 package mobile.solareye.cookflow
 
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.navigate
 import mobile.solareye.cookflow.Destinations.RecipeDetail
 
 object Destinations {

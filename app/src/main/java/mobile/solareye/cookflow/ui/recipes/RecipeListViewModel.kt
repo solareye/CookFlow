@@ -4,10 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import mobile.solareye.cookflow.domain.coroutine.CoroutineDispatchers
 import mobile.solareye.cookflow.domain.coroutine.UiScope
@@ -39,6 +36,7 @@ class RecipeListViewModel(
     private fun loadRecipeList() {
         viewModelScope.launch(dispatchers.main) {
             repository.getRecipeList()
+                .onStart { _partialState.postValue(RecipeListPartialState.InitialLoadingState.Loading) }
                 .flowOn(dispatchers.io)
                 .handleErrors()
                 .collect { recipeList ->
