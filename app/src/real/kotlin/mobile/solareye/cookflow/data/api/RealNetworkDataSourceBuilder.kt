@@ -10,8 +10,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import java.util.concurrent.TimeUnit
 
-
-object NetworkDataSourceBuilder {
+object RealNetworkDataSourceBuilder {
 
     private const val BASE_URL = "https://ybplayer.sytes.net/api/v1/"
 
@@ -26,11 +25,9 @@ object NetworkDataSourceBuilder {
 
             return chain.proceed(request)
         }
-
     }
 
     private fun getRetrofit(): Retrofit {
-
         val loggingInterceptor = LoggingInterceptor.Builder()
             .setLevel(Level.BASIC)
             .tag("ServerLogging")
@@ -52,6 +49,7 @@ object NetworkDataSourceBuilder {
             .build()
     }
 
-    val networkDataSource: NetworkDataSource = getRetrofit().create(NetworkDataSource::class.java)
-
+    val networkDataSource: NetworkDataSource =
+        getRetrofit().create(NetworkDataSource::class.java)
 }
+

@@ -16,7 +16,7 @@ import mobile.solareye.cookflow.Actions
 import mobile.solareye.cookflow.Destinations.RecipeDetail
 import mobile.solareye.cookflow.Destinations.RecipeDetailArgs.RecipeId
 import mobile.solareye.cookflow.Destinations.RecipeList
-import mobile.solareye.cookflow.data.api.NetworkDataSourceBuilder
+import mobile.solareye.cookflow.data.api.NetworkDataSourceProvider
 import mobile.solareye.cookflow.domain.coroutine.CoroutineDispatchersImpl
 import mobile.solareye.cookflow.domain.coroutine.UiScope
 import mobile.solareye.cookflow.repository.RecipeListRepositoryImpl
@@ -27,7 +27,7 @@ class MainActivity : ComponentActivity() {
 
     private val uiScope = UiScope()
     private val repository by lazy {
-        RecipeListRepositoryImpl(NetworkDataSourceBuilder.networkDataSource)
+        RecipeListRepositoryImpl(NetworkDataSourceProvider.networkDataSource)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

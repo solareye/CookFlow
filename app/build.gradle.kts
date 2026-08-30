@@ -24,6 +24,17 @@ android {
                 "proguard-rules.pro"
             )
         }
+        create("mocked") {
+            initWith(getByName("debug"))
+            applicationIdSuffix = ".mocked"
+            versionNameSuffix = "-mocked"
+            matchingFallbacks += listOf("debug")
+        }
+    }
+
+    sourceSets {
+        getByName("debug").kotlin.directories.add("src/real/kotlin")
+        getByName("release").kotlin.directories.add("src/real/kotlin")
     }
 
     compileOptions {
