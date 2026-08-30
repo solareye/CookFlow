@@ -1,19 +1,19 @@
 plugins {
-    id("com.android.application")
-    id("org.jetbrains.kotlin.plugin.compose")
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.kotlin.compose)
 }
 
 android {
-    namespace = Config.applicationId
-    compileSdk = Config.compileSdkVersion
+    namespace = "mobile.solareye.cookflow"
+    compileSdk = 30
 
     defaultConfig {
-        applicationId = Config.applicationId
-        minSdk = Config.minSdkVersion
-        targetSdk = Config.targetSdkVersion
-        versionCode = Config.versionCode
-        versionName = Config.versionName
-        testInstrumentationRunner = Config.androidTestInstrumentation
+        applicationId = "mobile.solareye.cookflow"
+        minSdk = 26
+        targetSdk = 30
+        versionCode = 1
+        versionName = "0.0.1"
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
@@ -37,9 +37,8 @@ android {
 
 dependencies {
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
-    //app libs
-    implementation(Dependencies.appLibraries)
-    //test libs
-    testImplementation(Dependencies.testLibraries)
-    androidTestImplementation(Dependencies.androidTestLibraries)
+    implementation(libs.bundles.app)
+
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.bundles.android.test)
 }
