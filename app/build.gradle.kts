@@ -1,12 +1,11 @@
 plugins {
     id("com.android.application")
-    kotlin("android")
-    id("androidx.navigation.safeargs.kotlin")
+    id("org.jetbrains.kotlin.plugin.compose")
 }
 
 android {
+    namespace = Config.applicationId
     compileSdk = Config.compileSdkVersion
-    buildToolsVersion = Config.buildToolsVersion
 
     defaultConfig {
         applicationId = Config.applicationId
@@ -31,15 +30,8 @@ android {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
-    kotlinOptions {
-        jvmTarget = "1.8"
-        useIR = true
-    }
     buildFeatures {
         compose = true
-    }
-    composeOptions {
-        kotlinCompilerExtensionVersion = Versions.compose
     }
 }
 

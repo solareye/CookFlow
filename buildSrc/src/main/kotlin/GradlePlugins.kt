@@ -1,5 +1,5 @@
 object GradlePlugins {
-    const val Android = "com.android.tools.build:gradle:${Versions.gradle}"
-    const val Kotlin = "org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.kotlin}"
-    const val Navigation = "androidx.navigation:navigation-safe-args-gradle-plugin:${Versions.navigation}"
+    const val Android = "com.android.tools.build:gradle:${Versions.agp}"
+    const val Compose =
+        "org.jetbrains.kotlin.plugin.compose:org.jetbrains.kotlin.plugin.compose.gradle.plugin:${Versions.kotlin}"
 }

@@ -12,7 +12,7 @@ class RecipeListViewModelFactory(
     private val repository: RecipeListRepository,
     private val openRecipe: (String) -> Unit
 ) : ViewModelProvider.Factory {
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(RecipeListViewModel::class.java)) {
             return RecipeListViewModel(uiScope, dispatchers, repository, openRecipe) as T
         }

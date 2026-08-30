@@ -21,7 +21,7 @@ object NetworkDataSourceBuilder {
 
             val request: Request = original.newBuilder()
                 .header("Accept", "application/json")
-                .method(original.method, original.body)
+                .method(original.method(), original.body())
                 .build()
 
             return chain.proceed(request)

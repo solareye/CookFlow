@@ -4,11 +4,11 @@ buildscript {
     repositories {
         google()
         mavenCentral()
+        gradlePluginPortal()
     }
     dependencies {
         classpath(GradlePlugins.Android)
-        classpath(GradlePlugins.Kotlin)
-        classpath(GradlePlugins.Navigation)
+        classpath(GradlePlugins.Compose)
     }
 }
 
@@ -21,5 +21,5 @@ allprojects {
 }
 
 tasks.register("clean", Delete::class) {
-    delete(rootProject.buildDir)
+    delete(rootProject.layout.buildDirectory)
 }

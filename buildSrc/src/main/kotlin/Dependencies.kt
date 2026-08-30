@@ -2,10 +2,6 @@ import org.gradle.api.artifacts.dsl.DependencyHandler
 
 object Dependencies {
 
-    object Kotlin {
-        const val stdlib = "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${Versions.kotlin}"
-    }
-
     object AndroidX {
         const val coreKtx = "androidx.core:core-ktx:${Versions.coreKtx}"
     }
@@ -49,7 +45,6 @@ object Dependencies {
     }
 
     val appLibraries = arrayListOf(
-        Kotlin.stdlib,
         AndroidX.coreKtx,
 
         Material.material,
