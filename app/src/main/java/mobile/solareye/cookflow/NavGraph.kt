@@ -1,22 +1,21 @@
 package mobile.solareye.cookflow
 
-import androidx.navigation.NavHostController
-import mobile.solareye.cookflow.Destinations.RecipeDetail
+import androidx.navigation3.runtime.NavKey
+import kotlinx.serialization.Serializable
 
-object Destinations {
-    const val RecipeList = "recipeList"
-    const val RecipeDetail = "recipeDetail"
+@Serializable
+data object RecipeList : NavKey
 
-    object RecipeDetailArgs {
-        const val RecipeId = "recipeId"
-    }
-}
+@Serializable
+data class RecipeDetail(val recipeId: String) : NavKey
 
-class Actions(navController: NavHostController) {
+class Actions(private val backStack: MutableList<NavKey>) {
     val openRecipe: (String) -> Unit = { recipeId ->
-        navController.navigate("$RecipeDetail/$recipeId")
+        backStack.add(RecipeDetail(recipeId))
     }
     val navigateBack: () -> Unit = {
-        navController.popBackStack()
+        if (backStack.size > 1) {
+            backStack.removeAt(backStack.lastIndex)
+        }
     }
 }

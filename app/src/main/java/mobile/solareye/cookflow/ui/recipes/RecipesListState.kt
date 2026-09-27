@@ -1,9 +1,9 @@
 package mobile.solareye.cookflow.ui.recipes
 
-import mobile.solareye.cookflow.data.recipe_detail.RecipeDetailItem
+import mobile.solareye.cookflow.data.model.RecipeListItem
 
 data class RecipesListState(
-    val recipes: List<RecipeDetailItem> = emptyList(),
+    val recipes: List<RecipeListItem> = emptyList(),
     val isLoading: Boolean = false,
     val isPtrLoading: Boolean = false,
     val error: String? = null,

@@ -28,7 +28,9 @@ class RecipeListViewModel(
             }
             RecipeListIntent.PullToRefreshIntent -> TODO()
             is RecipeListIntent.OpenRecipeIntent -> {
-                openRecipe(intent.recipe.id)
+                if (intent.recipe.canOpenDetails) {
+                    openRecipe(intent.recipe.id)
+                }
             }
         }
     }
@@ -36,8 +38,8 @@ class RecipeListViewModel(
     private fun loadRecipeList() {
         viewModelScope.launch(dispatchers.main) {
             repository.getRecipeList()
-                .onStart { _partialState.postValue(RecipeListPartialState.InitialLoadingState.Loading) }
                 .flowOn(dispatchers.io)
+                .onStart { _partialState.value = RecipeListPartialState.InitialLoadingState.Loading }
                 .handleErrors()
                 .collect { recipeList ->
                     _partialState.value =

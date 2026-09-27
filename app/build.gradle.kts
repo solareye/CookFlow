@@ -1,20 +1,20 @@
 plugins {
-    id("com.android.application")
-    kotlin("android")
-    id("androidx.navigation.safeargs.kotlin")
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
-    compileSdk = Config.compileSdkVersion
-    buildToolsVersion = Config.buildToolsVersion
+    namespace = "mobile.solareye.cookflow"
+    compileSdk = 36
 
     defaultConfig {
-        applicationId = Config.applicationId
-        minSdk = Config.minSdkVersion
-        targetSdk = Config.targetSdkVersion
-        versionCode = Config.versionCode
-        versionName = Config.versionName
-        testInstrumentationRunner = Config.androidTestInstrumentation
+        applicationId = "mobile.solareye.cookflow"
+        minSdk = 26
+        targetSdk = 36
+        versionCode = 1
+        versionName = "0.0.1"
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
@@ -25,29 +25,33 @@ android {
                 "proguard-rules.pro"
             )
         }
+        create("mocked") {
+            initWith(getByName("debug"))
+            applicationIdSuffix = ".mocked"
+            versionNameSuffix = "-mocked"
+            matchingFallbacks += listOf("debug")
+        }
+    }
+
+    sourceSets {
+        getByName("debug").kotlin.directories.add("src/real/kotlin")
+        getByName("release").kotlin.directories.add("src/real/kotlin")
+        getByName("test").resources.directories.add("src/main/assets")
     }
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
-    kotlinOptions {
-        jvmTarget = "1.8"
-        useIR = true
-    }
     buildFeatures {
         compose = true
-    }
-    composeOptions {
-        kotlinCompilerExtensionVersion = Versions.compose
     }
 }
 
 dependencies {
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
-    //app libs
-    implementation(Dependencies.appLibraries)
-    //test libs
-    testImplementation(Dependencies.testLibraries)
-    androidTestImplementation(Dependencies.androidTestLibraries)
+    implementation(libs.bundles.app)
+
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.bundles.android.test)
 }
