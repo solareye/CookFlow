@@ -36,6 +36,7 @@ android {
     sourceSets {
         getByName("debug").kotlin.directories.add("src/real/kotlin")
         getByName("release").kotlin.directories.add("src/real/kotlin")
+        getByName("test").resources.directories.add("src/main/assets")
     }
 
     compileOptions {

@@ -7,6 +7,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.core.view.WindowCompat
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
@@ -14,6 +15,7 @@ import mobile.solareye.cookflow.Actions
 import mobile.solareye.cookflow.RecipeDetail
 import mobile.solareye.cookflow.RecipeList
 import mobile.solareye.cookflow.data.api.NetworkDataSourceProvider
+import mobile.solareye.cookflow.data.local.BundledCoffeeRecipeDataSource
 import mobile.solareye.cookflow.domain.coroutine.CoroutineDispatchersImpl
 import mobile.solareye.cookflow.domain.coroutine.UiScope
 import mobile.solareye.cookflow.repository.RecipeListRepositoryImpl
@@ -24,11 +26,20 @@ class MainActivity : ComponentActivity() {
 
     private val uiScope = UiScope()
     private val repository by lazy {
-        RecipeListRepositoryImpl(NetworkDataSourceProvider.networkDataSource)
+        RecipeListRepositoryImpl(
+            dataSource = NetworkDataSourceProvider.networkDataSource,
+            localDataSource = BundledCoffeeRecipeDataSource {
+                applicationContext.assets.open(BundledCoffeeRecipeDataSource.ASSET_NAME)
+            },
+        )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        WindowCompat.getInsetsController(window, window.decorView).apply {
+            isAppearanceLightStatusBars = true
+            isAppearanceLightNavigationBars = true
+        }
         setContent {
             val backStack = rememberNavBackStack(RecipeList)
             val actions = remember(backStack) { Actions(backStack) }
