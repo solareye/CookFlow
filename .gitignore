@@ -21,6 +21,9 @@ out/
 .gradle/
 build/
 
+# Generated project outputs
+/outputs/
+
 # Local configuration file (sdk path, etc)
 local.properties
 

@@ -1,16 +1,17 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
     namespace = "mobile.solareye.cookflow"
-    compileSdk = 30
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "mobile.solareye.cookflow"
         minSdk = 26
-        targetSdk = 30
+        targetSdk = 36
         versionCode = 1
         versionName = "0.0.1"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"

@@ -7,15 +7,12 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.navigation.NavType
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.navArgument
-import androidx.navigation.compose.rememberNavController
+import androidx.navigation3.runtime.entryProvider
+import androidx.navigation3.runtime.rememberNavBackStack
+import androidx.navigation3.ui.NavDisplay
 import mobile.solareye.cookflow.Actions
-import mobile.solareye.cookflow.Destinations.RecipeDetail
-import mobile.solareye.cookflow.Destinations.RecipeDetailArgs.RecipeId
-import mobile.solareye.cookflow.Destinations.RecipeList
+import mobile.solareye.cookflow.RecipeDetail
+import mobile.solareye.cookflow.RecipeList
 import mobile.solareye.cookflow.data.api.NetworkDataSourceProvider
 import mobile.solareye.cookflow.domain.coroutine.CoroutineDispatchersImpl
 import mobile.solareye.cookflow.domain.coroutine.UiScope
@@ -33,36 +30,32 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-
-            val navController = rememberNavController()
-            val actions = remember(navController) { Actions(navController) }
+            val backStack = rememberNavBackStack(RecipeList)
+            val actions = remember(backStack) { Actions(backStack) }
             val viewModel = remember { recipeListViewModel(actions) }
 
-            NavHost(
-                navController = navController,
-                startDestination = RecipeList
-            ) {
-                composable(RecipeList) {
-                    MaterialTheme {
-                        RecipesScreen.RecipesScreen(
-                            stateLiveData = viewModel.state,
-                            dispatchIntent = viewModel::onViewIntent
-                        )
+            NavDisplay(
+                backStack = backStack,
+                onBack = actions.navigateBack,
+                entryProvider = entryProvider {
+                    entry<RecipeList> {
+                        MaterialTheme {
+                            RecipesScreen.RecipesScreen(
+                                stateLiveData = viewModel.state,
+                                dispatchIntent = viewModel::onViewIntent
+                            )
+                        }
+                    }
+                    entry<RecipeDetail> { route ->
+                        MaterialTheme {
+                            RecipeDetailScreen.RecipeDetailScreen(
+                                recipeId = route.recipeId,
+                                navigateBack = actions.navigateBack
+                            )
+                        }
                     }
                 }
-                composable(
-                    "${RecipeDetail}/{$RecipeId}",
-                    arguments = listOf(navArgument(RecipeId) { type = NavType.StringType })
-                ) { backStackEntry ->
-                    MaterialTheme {
-                        RecipeDetailScreen.RecipeDetailScreen(
-                            recipeId = backStackEntry.arguments?.getString(RecipeId) ?: "-1",
-                            navigateBack = actions.navigateBack
-                        )
-                    }
-                }
-            }
-
+            )
         }
     }
 
